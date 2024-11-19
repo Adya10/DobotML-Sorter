@@ -100,15 +100,19 @@ def blue():
     device.grip(True) #grab the cube
     time.sleep(3)
 
+def API():
+    print('Code not ready yet')
+
 
 detected_color = color_recognition()
 if detected_color == 'red':
     red()
 
-if detected_color == 'yellow':
+elif detected_color == 'yellow':
     yellow()
 
-if detected_color == 'blue':
+elif detected_color == 'blue':
     blue()
 
-print(detected_color)
+else: 
+    API()
