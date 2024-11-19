@@ -67,5 +67,3 @@ def main():
 if __name__ == "__main__":
     color = main()
     print(f"Final Detected Color: {color}")
-
-print(color)
