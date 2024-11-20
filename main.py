@@ -1,17 +1,20 @@
 from serial.tools import list_ports
-from pydobotplus import Dobot
+import pydobotplus
 import time
 import cv2
 import numpy as np
+import pywhatkit
 
-# available_ports = list_ports.comports()
-# print(f'available ports: {[x.device for x in available_ports]}')
-# port = available_ports[3].device
+port = list_ports.comports()[3].device # list port and connect
+device = pydobotplus.Dobot(port=port) # define port
 
-# device = Dobot(port=port)
-
+# start position
 # device.clear_alarms()
 # device.home()
+# device.move_to(x=229.7577362060547, y=-8.920731544494629, z=76.87593078613281, r=-28.777681350708008) # home position
+# device._set_end_effector_gripper(enable=True) # close gripper
+pose = device.get_pose() # get position
+print(pose)
 
 def color_recognition():
     COLOR_RANGES = {
@@ -83,24 +86,68 @@ def coveyor():
     print(device.get_ir(port=1))
 
 def red():
-    device.grip(True)
-    device.move_to(x=-4.214, y=-268.311, z=32.32,r=-83.84)
-    device.grip(True) #grab the cube
-    time.sleep(3)
+    # move to conve
+    device.move_to(x=-21.18318748474121, y=-286.0504455566406, z=63.0224723815918, r=-120.78944396972656)
+    device._set_end_effector_gripper(enable=False) # open gripper
+    time.sleep(0.5)
+    device.move_to(x=-21.18318748474121, y=-286.0504455566406, z=33.0224723815918, r=-120.78944396972656)
+    device._set_end_effector_gripper(enable=True) # close gripper
+    time.sleep(0.5)
+    device.move_to(x=-21.18318748474121, y=-286.0504455566406, z=63.0224723815918, r=-120.78944396972656)
+
+    # move red obj
+    device.move_to(x=-94.33621215820312, y=246.54771423339844, z=-18.039230346679688, r=84.38408660888672)
+    device._set_end_effector_gripper(enable=False) # open gripper
+    time.sleep(0.5)
+    device.move_to(x=-94.33621215820312, y=246.54771423339844, z=18.039230346679688, r=84.38408660888672)
+    time.sleep(0.5)
+    device._set_end_effector_gripper(enable=True) # close gripper
+    device.move_to(x=229.7577362060547, y=-8.920731544494629, z=76.87593078613281, r=-28.777681350708008)
 
 def yellow():
-    device.grip(True)
-    device.move_to(x=-4.214, y=-268.311, z=32.32,r=-83.84)
-    device.grip(True) #grab the cube
-    time.sleep(3)
+    # move to conve
+    device.move_to(x=-21.18318748474121, y=-286.0504455566406, z=63.0224723815918, r=-120.78944396972656)
+    device._set_end_effector_gripper(enable=False) # open gripper
+    time.sleep(0.5)
+    device.move_to(x=-21.18318748474121, y=-286.0504455566406, z=33.0224723815918, r=-120.78944396972656)
+    device._set_end_effector_gripper(enable=True) # close gripper
+    time.sleep(0.5)
+    device.move_to(x=-21.18318748474121, y=-286.0504455566406, z=63.0224723815918, r=-120.78944396972656)
+
+    # move yellow obj
+    device.move_to(x=154.1808624267578, y=201.44615173339844, z=-16.757827758789062, r=26.016435623168945)
+    device._set_end_effector_gripper(enable=False) # open gripper
+    time.sleep(0.5)
+    device.move_to(x=154.1808624267578, y=201.44615173339844, z=16.757827758789062, r=26.016435623168945)
+    time.sleep(0.5)
+    device._set_end_effector_gripper(enable=True) # close gripper
+    device.move_to(x=229.7577362060547, y=-8.920731544494629, z=76.87593078613281, r=-28.777681350708008)
 
 def blue():
-    device.grip(True)
-    device.move_to(x=-4.214, y=-268.311, z=32.32,r=-83.84)
-    device.grip(True) #grab the cube
-    time.sleep(3)
+ # move to conve
+    device.move_to(x=-21.18318748474121, y=-286.0504455566406, z=63.0224723815918, r=-120.78944396972656)
+    device._set_end_effector_gripper(enable=False) # open gripper
+    time.sleep(0.5)
+    device.move_to(x=-21.18318748474121, y=-286.0504455566406, z=33.0224723815918, r=-120.78944396972656)
+    device._set_end_effector_gripper(enable=True) # close gripper
+    time.sleep(0.5)
+    device.move_to(x=-21.18318748474121, y=-286.0504455566406, z=63.0224723815918, r=-120.78944396972656)
+
+    # move blue obj
+    device.move_to(x=23.042776107788086, y=255.08580017089844, z=-19.236053466796875, r=58.284088134765625)
+    device._set_end_effector_gripper(enable=False) # open gripper
+    time.sleep(0.5)
+    device.move_to(x=23.042776107788086, y=255.08580017089844, z=19.236053466796875, r=58.284088134765625)
+    time.sleep(0.5)
+    device._set_end_effector_gripper(enable=True) # close gripper
+    device.move_to(x=229.7577362060547, y=-8.920731544494629, z=76.87593078613281, r=-28.777681350708008)
+
 
 def API():
+    # mobile_num = '+4915734553894' # contact number
+    # imgPath = 'jq2kktmfx9ra1.jpg' # save imag path
+    # caption = 'John Pork 2' # message
+    # pywhatkit.sendwhats_image(mobile_num, imgPath, caption, 7) # send image and message
     print('Code not ready yet')
 
 
@@ -116,3 +163,4 @@ elif detected_color == 'blue':
 
 else: 
     API()
+    
