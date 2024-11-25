@@ -8,11 +8,12 @@ import pywhatkit
 port = list_ports.comports()[3].device # list port and connect
 device = pydobotplus.Dobot(port=port) # define port
 
-# start position
-# device.clear_alarms()
-# device.home()
-# device.move_to(x=229.7577362060547, y=-8.920731544494629, z=76.87593078613281, r=-28.777681350708008) # home position
-# device._set_end_effector_gripper(enable=True) # close gripper
+#start position
+device.clear_alarms()
+device.home()
+device.move_to(x=229.7577362060547, y=-8.920731544494629, z=76.87593078613281, r=-28.777681350708008) # home position
+device._set_end_effector_gripper(enable=True) # close gripper
+
 pose = device.get_pose() # get position
 print(pose)
 
@@ -80,9 +81,9 @@ def color_recognition():
     cv2.destroyAllWindows()
     return detected_color
 
-def coveyor():
+def conveyor():
     device.conveyor_belt(speed=0.5, direction=1)
-    device.conveyor_belt_distance(speed_mm_per_sec=100, distance_mm=200, direction=1)
+    device.conveyor_belt_distance(speed_mm_per_sec=100, distance_mm=100, direction=1)
     print(device.get_ir(port=1))
 
 def red():
@@ -151,16 +152,28 @@ def API():
     print('Code not ready yet')
 
 
-detected_color = color_recognition()
-if detected_color == 'red':
-    red()
 
-elif detected_color == 'yellow':
-    yellow()
+count = 3
+start = 0
 
-elif detected_color == 'blue':
-    blue()
+# while start != count:
 
-else: 
-    API()
+#     conveyor()
+
+#     detected_color = color_recognition()
+#     if detected_color == 'red':
+#         red()
+
+#     elif detected_color == 'yellow':
+#         yellow()
+
+#     elif detected_color == 'blue':
+#         blue()
+
+#     else: 
+#         API()
+
+#     start += 1
+
+red()
     
