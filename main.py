@@ -13,43 +13,76 @@ device.clear_alarms()
 device.home()
 device.move_to(x=229.7577362060547, y=-8.920731544494629, z=76.87593078613281, r=-28.777681350708008) # home position
 # device._set_end_effector_gripper(enable=True) # close gripper
-pose = device.get_pose() # get position
-print(pose)
+# pose = device.get_pose() # get position
+# print(pose)
 
 def color_recognition():
     COLOR_RANGES = {
-        "blue": ((100, 150, 0), (140, 255, 255)),
-        "yellow": ((20, 150, 100), (30, 255, 255)),
-        "red_low": ((0, 150, 100), (10, 255, 255)),
-        "red_high": ((170, 150, 100), (180, 255, 255)),
+        "blue": ((100, 150, 50), (140, 255, 255)),      # Blue
+        "yellow": ((20, 150, 100), (30, 255, 255)),    # Yellow
+        "red_low": ((0, 150, 100), (10, 255, 255)),    # Red (Lower range)
+        "red_high": ((170, 150, 100), (180, 255, 255)),# Red (Upper range)
+        "green": ((35, 150, 50), (85, 255, 255))       # Green
     }
 
     MIN_AREA = 1500  # Adjust for an ~80% confidence level
 
+    # def detect_color_objects(frame):
+    #     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+        
+    #     # Check for blue
+    #     blue_mask = cv2.inRange(hsv, COLOR_RANGES["blue"][0], COLOR_RANGES["blue"][1])
+    #     blue_contours, _ = cv2.findContours(blue_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    #     if process_contours(blue_contours, "blue"):
+    #         return "blue"
+
+    #     # Check for yellow
+    #     yellow_mask = cv2.inRange(hsv, COLOR_RANGES["yellow"][0], COLOR_RANGES["yellow"][1])
+    #     yellow_contours, _ = cv2.findContours(yellow_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    #     if process_contours(yellow_contours, "yellow"):
+    #         return "yellow"
+        
+    #     # Check for red (both ranges)
+    #     red_mask_low = cv2.inRange(hsv, COLOR_RANGES["red_low"][0], COLOR_RANGES["red_low"][1])
+    #     red_mask_high = cv2.inRange(hsv, COLOR_RANGES["red_high"][0], COLOR_RANGES["red_high"][1])
+    #     red_mask = cv2.bitwise_or(red_mask_low, red_mask_high)
+    #     red_contours, _ = cv2.findContours(red_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    #     if process_contours(red_contours, "red"):
+    #         return "red"
+        
+    #     return None
+
     def detect_color_objects(frame):
+        """
+        Detect objects of specific colors in the given frame using predefined HSV color ranges.
+        
+        Args:
+            frame (numpy.ndarray): Input image in BGR format.
+
+        Returns:
+            str: Name of the detected color or None if no color is detected.
+        """
         hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
         
-        # Check for blue
-        blue_mask = cv2.inRange(hsv, COLOR_RANGES["blue"][0], COLOR_RANGES["blue"][1])
-        blue_contours, _ = cv2.findContours(blue_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        if process_contours(blue_contours, "blue"):
-            return "blue"
+        # Iterate over all colors in COLOR_RANGES
+        for color, (lower, upper) in COLOR_RANGES.items():
+            if color == "red_low":  # Handle red as a special case (low and high ranges combined)
+                red_mask_low = cv2.inRange(hsv, COLOR_RANGES["red_low"][0], COLOR_RANGES["red_low"][1])
+                red_mask_high = cv2.inRange(hsv, COLOR_RANGES["red_high"][0], COLOR_RANGES["red_high"][1])
+                mask = cv2.bitwise_or(red_mask_low, red_mask_high)
+            else:
+                mask = cv2.inRange(hsv, lower, upper)
+            
+            # Find contours for the mask
+            contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            
+            # Process contours and return the color if detected
+            if process_contours(contours, color):
+                return color
 
-        # Check for yellow
-        yellow_mask = cv2.inRange(hsv, COLOR_RANGES["yellow"][0], COLOR_RANGES["yellow"][1])
-        yellow_contours, _ = cv2.findContours(yellow_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        if process_contours(yellow_contours, "yellow"):
-            return "yellow"
-        
-        # Check for red (both ranges)
-        red_mask_low = cv2.inRange(hsv, COLOR_RANGES["red_low"][0], COLOR_RANGES["red_low"][1])
-        red_mask_high = cv2.inRange(hsv, COLOR_RANGES["red_high"][0], COLOR_RANGES["red_high"][1])
-        red_mask = cv2.bitwise_or(red_mask_low, red_mask_high)
-        red_contours, _ = cv2.findContours(red_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        if process_contours(red_contours, "red"):
-            return "red"
-        
+        # If no color is detected, return None
         return None
+
 
     def process_contours(contours, color_name):
         for contour in contours:
@@ -151,29 +184,29 @@ def yellow():
 # -----------------------------------------------------conveyor-------------------------------------------------------- # 
 def conveyor():
     device.conveyor_belt(1.0, direction=1, interface=0)
-    device.conveyor_belt_distance(speed_mm_per_sec=100, distance_mm=100, direction=1, interface=0)
+    device.conveyor_belt_distance(speed_mm_per_sec=100, distance_mm=150, direction=1, interface=0)
 
 # -----------------------------------------------------whatsapp-------------------------------------------------------- # 
-# def send_message():
-#     mobile_num = '+4915734553894' # contact number
-#     imgPath = 'jq2kktmfx9ra1.jpg' # save imag path
-#     caption = 'John Pork 2' # message
-#     pywhatkit.sendwhats_image(mobile_num, imgPath, caption, 7) # send image and message
+def send_message():
+    mobile_num = '+4915566037268' # contact number
+    imgPath = '/Users/advait/Documents/Masters/Sem 2/AI Project/Dobot/unknown.jpg' # save imag path
+    caption = 'Unknown color' # message
+    pywhatkit.sendwhats_image(mobile_num, imgPath, caption, 7) # send image and message
 
 
 # -----------------------------------------------------main-------------------------------------------------------- # 
 
-for i in range(0,3):
+for i in range(0,1):
     detected_color = color_recognition()
     conveyor()
     if detected_color == 'blue':
         blue()
 
-    elif detected_color == 'red':
+    elif detected_color in ['red_low', 'red_high']:
         red()
 
     elif detected_color == 'yellow':
         yellow()
 
-    # else:
-    #     send_message()
+    else:
+        send_message()
